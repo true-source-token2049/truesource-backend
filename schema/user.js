@@ -23,6 +23,7 @@ const userSchema = {
   username: { type: STRING, unique: true },
   profile_icon: { type: STRING },
   wallet_address: { type: STRING },
+  alchemy_user_id: { type: STRING },
 };
 
 export default function (app) {

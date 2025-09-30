@@ -14,6 +14,7 @@ declare global {
   namespace Express {
     export interface Request {
       meta?: Meta;
+      user?: Meta;
       app: ExpressApp;
     }
   }
