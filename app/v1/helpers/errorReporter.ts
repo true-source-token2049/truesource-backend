@@ -26,7 +26,7 @@ export function errorCreator(err: any) {
 export const handleCatch = (
   req: Request,
   res: Response,
-  error: Error,
+  error: any,
   code = 200
 ) => {
   return new Promise((resolve, reject) => {

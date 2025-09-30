@@ -49,6 +49,7 @@ export const _loginAdmin = async (payload: Omit<AdminUser, "name">) => {
           jsonWebTokenConfig["admin_refresh"]
         ),
       ]);
+
       return {
         message: "User Succesfully logged In",
         token: {
@@ -57,7 +58,9 @@ export const _loginAdmin = async (payload: Omit<AdminUser, "name">) => {
         },
       };
     }
-  } catch (e) {}
+  } catch (e) {
+    throw e;
+  }
 };
 
 export const _getAdminUserById = async (id: number) => {
