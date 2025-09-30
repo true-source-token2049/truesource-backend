@@ -55,12 +55,21 @@ export const postgresConfig = {
   },
 };
 
-export const jsonWebTokenConfig = {};
+export const jsonWebTokenConfig = {
+  admin_access: "admin_key",
+  admin_refresh: "admin_key",
+};
+
+export const TOKEN_EXPIRATION = {
+  access: 3600, // 1 hour
+  refresh: 2592000, // 30 days
+};
 
 export const JWT_SHARED_VERSION = process.env.JWT_SHARED_VERSION;
 
 export const routePrefixV1 = {
   openRoute: "/api/v1",
+  adminRoute: "/api/v1/admin",
   brandRoute: "/api/v1/brand",
   userRoute: "/api/v1/user",
 };
