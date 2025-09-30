@@ -1,0 +1,71 @@
+{
+  "name": "truesource-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "ts-node-dev --respawn --transpile-only ./app.ts",
+    "debug": "ts-node-dev --respawn --transpile-only ./app.ts",
+    "build": "rimraf dist/ && mkdir dist && tsc && cp -R dist/ && cp -R package.json dist/ && cp -R public dist/",
+    "migrate:up": "sequelize db:migrate",
+    "lint-staged": "lint-staged",
+    "prettier": "prettier --write \"./**/*.{js,jsx,ts,tsx,scss,less}\"",
+    "test": "jest --watch --testTimeout=10000 --detectOpenHandles --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged",
+      "prepare-commit-msg": "exec < /dev/tty && npx git-cz --hook || true"
+    }
+  },
+  "lint-staged": {
+    "./**/*.{js,jsx,ts,tsx,scss,less}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": false,
+    "tabWidth": 2
+  },
+  "author": "shivam mishra",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-fileupload": "^1.5.1",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/lodash": "^4.17.13",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.9.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "rimraf": "^5.0.5",
+    "sequelize-cli": "^6.6.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
+  }
+}
