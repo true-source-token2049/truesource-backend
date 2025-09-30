@@ -13,4 +13,11 @@ export const routes = [
     routePrefix: routePrefix.adminRoute,
     middleware: ["isAdminUser"],
   },
+  {
+    method: "get",
+    endPoint: "product/:product_id",
+    handler: "getProductById",
+    routePrefix: routePrefix.adminRoute,
+    middleware: ["isAdminUser"],
+  },
 ];
