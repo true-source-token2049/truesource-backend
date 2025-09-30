@@ -33,5 +33,5 @@ export default function (app) {
     productAssetSchema,
     { paranoid: true }
   );
-  addInstance(collectionNames.product_assets, product_assets);
+  addInstance(collectionNames.PRODUCT_ASSETS, product_assets);
 }

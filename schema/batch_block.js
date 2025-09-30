@@ -11,13 +11,19 @@ const batchBlockSchema = {
     unique: true,
     autoIncrement: true,
   },
-  authcode: {
+  manufacturer_transaction_hash: {
     type: STRING,
-    allowNull: false,
   },
-  url: {
+  retailer_transaction_hash: {
+    type: STRING,
+  },
+  distributor_transaction_hash: {
+    type: STRING,
+  },
+  status: {
     type: STRING,
     allowNull: false,
+    defaultValue: "pending",
   },
 };
 

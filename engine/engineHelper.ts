@@ -45,7 +45,6 @@ export const engineImport = (
           const ProductOwnership = getInstance(
             collectionNames.PRODUCT_OWNERSHIP
           );
-          const AdminUser = getInstance(collectionNames.ADMIN_USER);
           const UserCollection = getInstance(collectionNames.USER_COLLECTION);
           const User = getInstance(collectionNames.USER);
 
@@ -53,22 +52,31 @@ export const engineImport = (
           ProductAssets.belongsTo(Product, { foreignKey: "product_id" });
 
           Product.hasMany(ProductAttributes, { foreignKey: "product_id" });
-          ProductAttributes.belongsTo(Product);
+          ProductAttributes.belongsTo(Product, { foreignKey: "product_id" });
 
           Product.hasMany(Batches, { foreignKey: "product_id" });
           Batches.belongsTo(Product, { foreignKey: "product_id" });
 
-          Batches.hasMany(BatchBlock, { foreignKey: "batch_id" });
-          BatchBlock.belongsTo(Batches, { foreignKey: "batch_id" });
+          Batches.hasOne(BatchBlock, { foreignKey: "batch_id" });
 
           Product.hasMany(ProductOwnership, { foreignKey: "product_id" });
-          Product.hasMany(BatchRangeLog, { foreignKey: "product_id" });
+          Batches.hasMany(BatchRangeLog, { foreignKey: "batch_id" });
 
-          User.belongsTo(ProductOwnership, { as: "from" });
-          User.belongsTo(ProductOwnership, { as: "to" });
+          ProductOwnership.belongsTo(Product, { foreignKey: "product_id" });
+          BatchRangeLog.belongsTo(Batches, { foreignKey: "batch_id" });
+
+          ProductOwnership.belongsTo(User, {
+            as: "from",
+          });
+          ProductOwnership.belongsTo(User, {
+            as: "to",
+          });
 
           User.hasMany(UserCollection, { foreignKey: "user_id" });
           BatchRangeLog.hasMany(UserCollection, { foreignKey: "brl_id" });
+
+          UserCollection.belongsTo(User, { foreignKey: "user_id" });
+          UserCollection.belongsTo(BatchRangeLog, { foreignKey: "brl_id" });
 
           app.sequelizeClient
             .sync()

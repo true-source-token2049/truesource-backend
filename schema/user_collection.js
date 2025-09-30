@@ -35,10 +35,10 @@ const userCollectionSchema = {
 };
 
 export default function (app) {
-  const authcodes = app.sequelizeClient.define(
-    collectionNames.AUTCHODES,
+  const schema = app.sequelizeClient.define(
+    collectionNames.USER_COLLECTION,
     userCollectionSchema,
     { paranoid: true }
   );
-  addInstance(collectionNames.AUTCHODES, authcodes);
+  addInstance(collectionNames.USER_COLLECTION, schema);
 }

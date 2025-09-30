@@ -26,10 +26,8 @@ const userSchema = {
 };
 
 export default function (app) {
-  const user = app.sequelizeClient.define(
-    collectionNames.USER_SCHEMA,
-    userSchema,
-    { paranoid: true }
-  );
-  addInstance(collectionNames.USER_SCHEMA, user);
+  const user = app.sequelizeClient.define(collectionNames.USER, userSchema, {
+    paranoid: true,
+  });
+  addInstance(collectionNames.USER, user);
 }
