@@ -1,4 +1,4 @@
-import { collectionNames } from "../configServer";
+import { collectionNames } from "../configserver";
 import { addInstance } from "../app/v1/helpers/databaseStorageHelper";
 import { BOOLEAN, INTEGER, STRING, TEXT } from "sequelize";
 import { JSONB } from "sequelize";
