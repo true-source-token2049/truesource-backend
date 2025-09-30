@@ -11,7 +11,7 @@
     "start": "node app.js",
     "dev": "ts-node-dev --respawn --transpile-only ./app.ts",
     "debug": "ts-node-dev --respawn --transpile-only ./app.ts",
-    "build": "rimraf dist/ && mkdir dist && tsc && cp -R dist/ && cp -R package.json dist/ && cp -R public dist/",
+    "build": "rimraf dist/ && mkdir dist && tsc && cp package.json dist/ && cp -R public dist/",
     "migrate:up": "sequelize db:migrate",
     "lint-staged": "lint-staged",
     "prettier": "prettier --write \"./**/*.{js,jsx,ts,tsx,scss,less}\"",
