@@ -1,14 +1,14 @@
+import fs from "fs";
+import _ from "lodash";
+import path from "path";
 import consoleColors from "../app/v1/enum/consoleColors";
 import * as routeLogger from "../app/v1/helpers/routeLogger";
-import fs from "fs";
-import path from "path";
-import noMiddleware from "../app/v1/middleware/noMiddleware";
-import _ from "lodash";
 import { setLogger } from "../app/v1/helpers/sequelizeLogHelper";
+import corsMiddleware from "../app/v1/middleware/corsMiddleware";
+import noMiddleware from "../app/v1/middleware/noMiddleware";
 import { ExpressApp } from "../type";
 import { getInstance } from "../app/v1/helpers/databaseStorageHelper";
 import { collectionNames } from "../configserver";
-import corsMiddleware from "../app/v1/middleware/corsMiddleware";
 
 export const engineImport = (
   app: ExpressApp,
@@ -32,6 +32,44 @@ export const engineImport = (
     Promise.all(promises)
       .then(() => {
         if (!isRoute) {
+          const Product = getInstance(collectionNames.PRODUCT);
+          const ProductAttributes = getInstance(
+            collectionNames.PRODUCT_ATTRIBUTES
+          );
+
+          const ProductAssets = getInstance(collectionNames.PRODUCT_ASSETS);
+          const Batches = getInstance(collectionNames.BATCHES);
+          const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
+          const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
+
+          const ProductOwnership = getInstance(
+            collectionNames.PRODUCT_OWNERSHIP
+          );
+          const AdminUser = getInstance(collectionNames.ADMIN_USER);
+          const UserCollection = getInstance(collectionNames.USER_COLLECTION);
+          const User = getInstance(collectionNames.USER);
+
+          Product.hasMany(ProductAssets, { foreignKey: "product_id" });
+          ProductAssets.belongsTo(Product, { foreignKey: "product_id" });
+
+          Product.hasMany(ProductAttributes, { foreignKey: "product_id" });
+          ProductAttributes.belongsTo(Product);
+
+          Product.hasMany(Batches, { foreignKey: "product_id" });
+          Batches.belongsTo(Product, { foreignKey: "product_id" });
+
+          Batches.hasMany(BatchBlock, { foreignKey: "batch_id" });
+          BatchBlock.belongsTo(Batches, { foreignKey: "batch_id" });
+
+          Product.hasMany(ProductOwnership, { foreignKey: "product_id" });
+          Product.hasMany(BatchRangeLog, { foreignKey: "product_id" });
+
+          User.belongsTo(ProductOwnership, { as: "from" });
+          User.belongsTo(ProductOwnership, { as: "to" });
+
+          User.hasMany(UserCollection, { foreignKey: "user_id" });
+          BatchRangeLog.hasMany(UserCollection, { foreignKey: "brl_id" });
+
           app.sequelizeClient
             .sync()
             .then(() => {

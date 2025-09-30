@@ -1,5 +1,17 @@
 export const PORT = process.env.PORT;
-export const collectionNames = {};
+export const collectionNames = {
+  PRODUCT: "products",
+  PRODUCT_ATTRIBUTES: "product_attrs",
+  PRODUCT_ASSETS: "product_assets",
+  BATCHES: "batches",
+  BATCH_RANGE_LOG: "batch_range_log",
+  AUTCHODES: "authcodes",
+  BATCH_BLOCK: "batch_block",
+  USER: "user",
+  USER_COLLECTION: "user_collection",
+  PRODUCT_OWNERSHIP: "product_ownership",
+  ADMIN_USER: "admin_user",
+};
 
 declare global {
   namespace NodeJS {

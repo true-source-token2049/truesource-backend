@@ -42,6 +42,7 @@ export const sequelize: Sequelize = new Sequelize(
   {
     host: postgresConfig.host,
     dialect: "postgres",
+    ssl: true,
     logging: sequelizeLogHelper,
     dialectOptions: postgresConfig.dialectOptions,
     define: postgresConfig.define,
