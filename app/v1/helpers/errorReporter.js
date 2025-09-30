@@ -1,8 +1,6 @@
 import consoleColors from "../enum/consoleColors";
 import { getInstance } from "./databaseStorageHelper";
-import { collectionNames, NODE_ENV, SLACK_TOKEN } from "../../../configserver";
-import axios from "axios";
-import { createSlackNotification } from "./slackNotifyHelper";
+import { collectionNames, NODE_ENV } from "../../../configserver";
 
 export function createError(message, error) {
   return {
@@ -36,41 +34,8 @@ export const handleCatch = (req, res, error, code = 200) => {
       },
       promises = [];
 
-    const err_payload = {
-      origin: req.headers.origin,
-      requestRoute: req.originalUrl,
-      requestMethod: req.method,
-      requestHeaders: headers,
-      body: req.body,
-      params: req.params,
-      query: req.query,
-    };
-
-    if (!error) {
-      logger = true;
-      err_payload.errorMessage = "Unable to Find Error";
-    } else if (error.error) {
-      logger = false;
-      err_payload.errorMessage = error.message;
-    } else if (error.isJoi) {
-      logger = false;
-      err_payload.errorMessage = error.message;
-    } else {
-      logger = true;
-      err_payload.errorMessage = error.message;
-    }
-
     console.log(consoleColors.redColor, "ERROR");
     console.log(error?.message);
-
-    if (logger) {
-      const slack_payload = createSlackNotification(err_payload, NODE_ENV);
-      promises.push([
-        axios.post("https://slack.com/api/chat.postMessage", slack_payload, {
-          headers: { authorization: `Bearer ${SLACK_TOKEN}` },
-        }),
-      ]);
-    }
 
     Promise.all(promises)
       .then(() => {

@@ -36,6 +36,10 @@ export const postgresConfig = {
   },
   dialectOptions: {
     supportBigNumbers: true,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
   },
 };
 
