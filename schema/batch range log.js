@@ -22,8 +22,9 @@ const batchRangeLogSchema = {
   },
   nft_token_id: {
     type: STRING,
-    allowNull: false,
-    defaultValue: "text",
+  },
+  nft_transaction_hash: {
+    type: STRING,
   },
 };
 
