@@ -20,4 +20,11 @@ export const routes = [
     routePrefix: routePrefix.adminRoute,
     middleware: ["isAdminUser"],
   },
+  {
+    method: "post",
+    endPoint: "product",
+    handler: "createProduct",
+    routePrefix: routePrefix.adminRoute,
+    middleware: ["isAdminUser"],
+  },
 ];

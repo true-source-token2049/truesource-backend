@@ -109,8 +109,8 @@ export const _getProductById = async (id: number) => {
 
 export const _createProduct = async (
   _payload: Omit<ProductInterface, "id"> & {
-    attrs: { name: string; value: string; type: string }[];
-    assets: { url: string; type: string; view: string }[];
+    product_attrs: { name: string; value: string; type: string }[];
+    product_assets: { url: string; type: string; view: string }[];
   }
 ) => {
   try {
@@ -121,7 +121,11 @@ export const _createProduct = async (
     const product = await Product.create(_payload, {
       include: [ProductAttributes, ProductAssets],
     });
-    return { message: "Product created successfully", id: product.id };
+
+    return {
+      message: "Product created successfully",
+      id: product.id,
+    };
   } catch (e) {
     throw e;
   }

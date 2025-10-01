@@ -65,37 +65,43 @@ export const createProduct = async (req: Request, res: Response) => {
       body: { payload },
     } = req;
 
-    Joi.object()
+    const _payload = await Joi.object()
       .keys({
-        title: Joi.string().required(),
-        brand: Joi.string().required(),
-        category: Joi.string().optional(),
-        sub_category: Joi.string().optional(),
-        description: Joi.string().required(),
-        plain_description: Joi.string().required(),
-        price: Joi.string().required(),
-        attrs: Joi.array()
+        title: Joi.string().trim().required(),
+        brand: Joi.string().trim().required(),
+        category: Joi.string().trim().optional(),
+        sub_category: Joi.string().trim().optional(),
+        description: Joi.string().trim().required(),
+        plain_description: Joi.string().trim().required(),
+        price: Joi.number().required(),
+        product_attrs: Joi.array()
           .items(
             Joi.object().keys({
-              name: Joi.string().required(),
-              value: Joi.string().required(),
-              type: Joi.string().required(),
+              name: Joi.string().trim().required(),
+              value: Joi.string().trim().required(),
+              type: Joi.string().trim().required(),
             })
           )
           .optional(),
-        assets: Joi.array()
+        product_assets: Joi.array()
           .items(
             Joi.object().keys({
-              url: Joi.string().uri().required(),
-              view: Joi.string().required(),
-              type: Joi.string().required(),
+              url: Joi.string().trim().required(),
+              view: Joi.string().trim().required(),
+              type: Joi.string().trim().required(),
             })
           )
           .optional(),
       })
-      .validateAsync(payload)
-      .then((_payload) => {
-        return _createProduct(_payload);
-      });
-  } catch (e) {}
+      .validateAsync(payload);
+
+    const result = await _createProduct(_payload);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
 };
