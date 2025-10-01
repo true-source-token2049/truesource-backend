@@ -3,6 +3,7 @@ import Joi from "joi";
 import { handleCatch } from "../helpers/errorReporter";
 import {
   _addBlockToBatch,
+  _assignRandomKeyToBRL,
   _attestBatchByAdmin,
   _claimNFT,
   _createBatch,
@@ -217,6 +218,32 @@ export const claimNFT = async (req: Request, res: Response) => {
       .validateAsync(payload);
 
     const result = await _claimNFT(authcode, _validatedHash, user.id);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const assignRandomKeyToBRL = async (req: Request, res: Response) => {
+  try {
+    const {
+      body: { payload },
+    } = req;
+
+    const _payload = await Joi.array()
+      .items(
+        Joi.object().keys({
+          random_key: Joi.string().trim().required(),
+          token: Joi.string().trim().required(),
+        })
+      )
+      .validateAsync(payload);
+
+    const result = await _assignRandomKeyToBRL(_payload);
 
     return res.send({
       success: true,

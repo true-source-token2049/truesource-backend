@@ -454,8 +454,10 @@ export const _verifyAuthCode = async (authcode: string) => {
       !_.isNull(result?.batch?.batch_block?.distributor_transaction_hash); // update based on batch-block
 
     if (result.order_item_id && hasAttestedNFT) result.can_claim_nft = true;
-    result.product = result.batch.product;
-    delete result.batch.product;
+
+    result.product = result?.batch?.product || {};
+    if (result.batch.product) delete result.batch.product;
+
     return result;
   } catch (error) {
     throw error;
@@ -527,6 +529,27 @@ export const _claimNFT = async (
     });
 
     console.log(_brl.toJSON());
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const _assignRandomKeyToBRL = async (
+  payload: {
+    random_key: string;
+    token: string;
+  }[]
+) => {
+  try {
+    const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
+    return Promise.all(
+      payload.map((item) =>
+        BatchRangeLog.update(
+          { random_key: item.random_key },
+          { where: { nft_token_id: item.token } }
+        )
+      )
+    );
   } catch (error) {
     throw error;
   }

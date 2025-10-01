@@ -60,4 +60,11 @@ export const routes = [
     middleware: ["isCustomer"],
     routePrefix: routePrefix.userRoute,
   },
+  {
+    method: "post",
+    endPoint: "batches/token/random",
+    handler: "assignRandomKeyToBRL",
+    routePrefix: routePrefix.adminRoute,
+    middleware: ["isAdminUser"],
+  },
 ];

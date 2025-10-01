@@ -25,6 +25,9 @@ const batchRangeLogSchema = {
   nft_transaction_hash: {
     type: STRING,
   },
+  random_key: {
+    type: STRING,
+  },
 };
 
 export default function (app) {
