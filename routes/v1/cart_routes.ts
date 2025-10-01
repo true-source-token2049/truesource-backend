@@ -11,7 +11,6 @@ export const routes = [
     endPoint: "cart/add",
     handler: "addToCart",
     routePrefix: routePrefix.userRoute,
-    middleware: ["isCustomer"],
   },
   {
     method: "get",

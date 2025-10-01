@@ -7,31 +7,29 @@ export const addToCart = async (req: Request, res: Response) => {
   try {
     const {
       body: {
-        payload: { productId, qty },
+        payload: { product_id, product_batch_id, quantity },
       },
-      user,
     } = req as any;
 
     // Validate input
-    const { productId: validatedProductId, qty: validatedQty } =
-      await Joi.object()
-        .required()
-        .keys({
-          productId: Joi.number().integer().positive().required(),
-          qty: Joi.number().integer().positive().required(),
-        })
-        .validateAsync({ productId, qty });
+    const {
+      product_id: validatedProductId,
+      product_batch_id: validatedProductBatchId,
+      quantity: validatedQty,
+    } = await Joi.object()
+      .required()
+      .keys({
+        product_id: Joi.number().integer().positive().required(),
+        product_batch_id: Joi.number().integer().positive().required(),
+        quantity: Joi.number().integer().positive().required(),
+      })
+      .validateAsync({ product_id, product_batch_id, quantity });
 
-    // Get user ID from authenticated user
-    if (!user || !user.id) {
-      return res.status(401).send({
-        success: false,
-        error: "Unauthorized",
-        message: "User not authenticated",
-      });
-    }
+    // Use a guest user ID (0) for unauthenticated users
+    // In production, you might want to use session IDs or other tracking
+    const userId = 0; // Guest user
 
-    const result = await _addToCart(user.id, validatedProductId, validatedQty);
+    const result = await _addToCart(userId, validatedProductId, validatedQty);
 
     return res.send({
       success: true,

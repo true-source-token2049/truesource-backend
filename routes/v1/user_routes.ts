@@ -8,7 +8,7 @@ export const handlerFilePath = require("path").join(
 export const routes = [
   {
     method: "get",
-    endPoint: "/",
+    endPoint: "",
     handler: "getCustomer",
     routePrefix: routePrefix.userRoute,
     middleware: ["isCustomer"],

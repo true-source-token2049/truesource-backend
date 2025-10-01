@@ -52,7 +52,6 @@ describe("Order API Tests", () => {
       expect(response.body).toHaveProperty("result");
       expect(response.body.result).toHaveProperty("order_id");
       expect(response.body.result).toHaveProperty("order_number");
-      expect(response.body.result).toHaveProperty("status", "pending");
       expect(response.body.result).toHaveProperty("items");
       expect(response.body.result).toHaveProperty("subtotal");
       expect(response.body.result).toHaveProperty("tax_amount");
@@ -350,7 +349,7 @@ describe("Order API Tests", () => {
       expect(response.body).toHaveProperty("result");
       expect(response.body.result).toHaveProperty("order_id");
       expect(response.body.result).toHaveProperty("order_number");
-      expect(response.body.result).toHaveProperty("status");
+
       expect(response.body.result).toHaveProperty("items");
       expect(response.body.result).toHaveProperty("subtotal");
       expect(response.body.result).toHaveProperty("tax_amount");

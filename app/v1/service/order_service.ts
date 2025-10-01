@@ -17,16 +17,18 @@ export interface CreateOrderPayload {
 }
 
 export interface OrderResponse {
+  id: number;
   order_id: number;
   order_number: string;
   status: string;
-  items: Array<{
+  order_items: Array<{
     product_id: number;
     product_name: string;
     quantity: number;
     price: number;
     subtotal: number;
   }>;
+  shipping_address?: any;
   subtotal: number;
   tax_amount: number;
   total_amount: number;
@@ -222,9 +224,10 @@ export const _createOrder = async (
 
     return {
       order_id: order.id,
+      id: order.id,
       order_number: order.order_number,
       status: order.status,
-      items: orderItemsData.map(({ batch_id, ...rest }) => rest),
+      order_items: orderItemsData.map(({ batch_id, ...rest }) => rest),
       subtotal: parseFloat(subtotal.toFixed(2)),
       tax_amount: parseFloat(taxAmount.toFixed(2)),
       total_amount: parseFloat(totalAmount.toFixed(2)),
@@ -277,11 +280,13 @@ export const _getOrderById = async (
 
     return {
       order_id: order.id,
+      id: order.id,
       order_number: order.order_number,
       status: order.status,
-      items,
+      order_items: items,
       subtotal: parseFloat(order.subtotal),
       tax_amount: parseFloat(order.tax_amount),
+      shipping_address: order.shipping_address,
       total_amount: parseFloat(order.total_amount),
       created_at: order.createdAt,
     };

@@ -30,9 +30,8 @@ export const _addToCart = async (
   userId: number,
   productId: number,
   quantity: number
-): Promise<CartSummary> => {
+): Promise<any> => {
   try {
-    const Cart = getInstance(collectionNames.CART);
     const Product = getInstance(collectionNames.PRODUCT);
 
     // Get product details
@@ -47,30 +46,33 @@ export const _addToCart = async (
       };
     }
 
-    // Check if item already exists in cart
-    let cartItem = await Cart.findOne({
-      where: {
-        user_id: userId,
-        product_id: productId,
+    // Return product information without storing in cart
+    // Client will manage cart state locally
+    const subtotal = parseFloat(product.price) * quantity;
+    const taxAmount = subtotal * SINGAPORE_GST_RATE;
+    const totalAmount = subtotal + taxAmount;
+
+    return {
+      id: null, // No cart item ID since we're not storing
+      user_id: userId,
+      product_id: productId,
+      quantity: quantity,
+      product: {
+        id: product.id,
+        title: product.title,
+        price: parseFloat(product.price),
+        brand: product.brand,
+        category: product.category,
+        sub_category: product.sub_category,
+        description: product.description,
+        plain_description: product.plain_description,
+        product_attrs: product.product_attrs,
+        product_assets: product.product_assets,
       },
-    });
-
-    if (cartItem) {
-      // Update quantity if item exists
-      cartItem.quantity = quantity;
-      await cartItem.save();
-    } else {
-      // Create new cart item
-      cartItem = await Cart.create({
-        user_id: userId,
-        product_id: productId,
-        quantity: quantity,
-        price: product.price,
-      });
-    }
-
-    // Get cart summary
-    return await _getCartSummary(userId);
+      subtotal: parseFloat(subtotal.toFixed(2)),
+      tax_amount: parseFloat(taxAmount.toFixed(2)),
+      total_amount: parseFloat(totalAmount.toFixed(2)),
+    };
   } catch (error) {
     throw error;
   }
