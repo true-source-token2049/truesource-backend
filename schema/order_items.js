@@ -27,11 +27,11 @@ const orderItemSchema = {
     allowNull: false,
   },
   price: {
-    type: FLOAT(10, 2),
+    type: FLOAT,
     allowNull: false,
   },
   subtotal: {
-    type: FLOAT(10, 2),
+    type: FLOAT,
     allowNull: false,
   },
 };
