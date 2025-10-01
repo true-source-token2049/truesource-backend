@@ -29,8 +29,8 @@ export const routes = [
   },
   {
     method: "post",
-    endPoint: "batches/attest",
-    handler: "attestBatchByAdmin",
+    endPoint: "batches/block/add",
+    handler: "addBlockToBatch",
     routePrefix: routePrefix.adminRoute,
     middleware: ["isAdminUser"],
   },

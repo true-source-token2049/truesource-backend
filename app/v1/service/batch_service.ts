@@ -231,6 +231,37 @@ export const _updateBatchNFT = async (payload: {
   }
 };
 
+export const _addBlockToBatch = async (payload: {
+  transactionHash: string;
+  type: string;
+  batch_id: number;
+}) => {
+  try {
+    const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
+    await BatchBlock.update(
+      Object.assign(
+        {},
+        payload.type === "manufacturer" && {
+          manufacturer_transaction_hash: payload.transactionHash,
+        },
+        payload.type === "retailer" && {
+          retailer_transaction_hash: payload.transactionHash,
+        },
+        payload.type === "distributor" && {
+          distributor_transaction_hash: payload.transactionHash,
+        }
+      ),
+      {
+        where: {
+          batch_id: payload.batch_id,
+        },
+      }
+    );
+    return { message: "Block succesfully added" };
+  } catch (e) {
+    throw e;
+  }
+};
 export const _attestBatchByAdmin = async (
   payload: {
     privateKey: string;

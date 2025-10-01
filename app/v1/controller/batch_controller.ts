@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { handleCatch } from "../helpers/errorReporter";
 import {
+  _addBlockToBatch,
   _attestBatchByAdmin,
   _createBatch,
   _getAllBatchesByProduct,
@@ -76,6 +77,33 @@ export const updateBatchNFT = async (req: Request, res: Response) => {
       .validateAsync(payload);
 
     const result = await _updateBatchNFT(_payload);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const addBlockToBatch = async (req: Request, res: Response) => {
+  try {
+    const {
+      meta: { type } = {} as Meta,
+      body: { payload },
+    } = req;
+
+    const _payload = await Joi.object()
+      .keys({
+        note: Joi.string().trim().required(),
+        type: Joi.string().required(),
+        transaction_hash: Joi.string().required(),
+        batch_id: Joi.number().required(),
+      })
+      .validateAsync(payload);
+
+    const result = await _addBlockToBatch(_payload);
 
     return res.send({
       success: true,
