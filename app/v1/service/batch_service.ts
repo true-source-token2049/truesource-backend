@@ -239,7 +239,7 @@ export const _updateBatchNFT = async (payload: {
 };
 
 export const _addBlockToBatch = async (payload: {
-  transactionHash: string;
+  transaction_hash: string;
   type: string;
   batch_id: number;
 }) => {
@@ -253,14 +253,14 @@ export const _addBlockToBatch = async (payload: {
       await BatchBlock.create(
         Object.assign(
           { batch_id: payload.batch_id },
-          payload.type === "manufacturer" && {
-            manufacturer_transaction_hash: payload.transactionHash,
+          payload.type.toLowerCase() === "manufacturer" && {
+            manufacturer_transaction_hash: payload.transaction_hash,
           },
-          payload.type === "retailer" && {
-            retailer_transaction_hash: payload.transactionHash,
+          payload.type.toLowerCase() === "retailer" && {
+            retailer_transaction_hash: payload.transaction_hash,
           },
-          payload.type === "distributor" && {
-            distributor_transaction_hash: payload.transactionHash,
+          payload.type.toLowerCase() === "distributor" && {
+            distributor_transaction_hash: payload.transaction_hash,
           }
         )
       );
@@ -268,14 +268,14 @@ export const _addBlockToBatch = async (payload: {
       await BatchBlock.update(
         Object.assign(
           {},
-          payload.type === "manufacturer" && {
-            manufacturer_transaction_hash: payload.transactionHash,
+          payload.type.toLowerCase() === "manufacturer" && {
+            manufacturer_transaction_hash: payload.transaction_hash,
           },
-          payload.type === "retailer" && {
-            retailer_transaction_hash: payload.transactionHash,
+          payload.type.toLowerCase() === "retailer" && {
+            retailer_transaction_hash: payload.transaction_hash,
           },
-          payload.type === "distributor" && {
-            distributor_transaction_hash: payload.transactionHash,
+          payload.type.toLowerCase() === "distributor" && {
+            distributor_transaction_hash: payload.transaction_hash,
           }
         ),
         {
