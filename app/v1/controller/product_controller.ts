@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import Joi from "joi";
-import { handleCatch } from "../helpers/errorReporter";
+import { createError, handleCatch } from "../helpers/errorReporter";
 import {
   _createProduct,
   _getAllProducts,
   _getProductById,
+  uploadToCloudinary,
 } from "../service/product_service";
+import { UploadedFile } from "express-fileupload";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -104,4 +106,49 @@ export const createProduct = async (req: Request, res: Response) => {
   } catch (error) {
     return handleCatch(req, res, error);
   }
+};
+
+export const addToCloudinary = (
+  req: Request & { files: UploadedFile[] },
+  res: Response
+) => {
+  const {
+    files,
+    query: { type, folder_name, brand_name },
+  } = req;
+
+  if (!files || files.length === 0) {
+    return res.send({
+      status: false,
+      error: createError(
+        "product image required, to be sent using form data object"
+      ),
+    });
+  }
+
+  // if (!type) {
+  //   return res.send({
+  //     status: false,
+  //     error: createError("type is required as query params"),
+  //   });
+  // }
+
+  const name = Object.keys(files)[0];
+  const image = files[name] as UploadedFile;
+
+  let folder = "";
+
+  if (folder_name && brand_name) {
+    folder = `${folder_name}/${brand_name}`;
+  }
+
+  if (type) folder += `/${type}`;
+
+  uploadToCloudinary(name, folder, image, image.mimetype)
+    .then((_response) => {
+      res.send({ status: true, result: { url: _response.secure_url } });
+    })
+    .catch((err) => {
+      handleCatch(req, res, err);
+    });
 };

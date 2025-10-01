@@ -13,6 +13,12 @@ export const collectionNames = {
   ADMIN_USER: "admin_user",
 };
 
+export const cloudinaryConfig = {
+  name: process.env.CLOUDINARY_CONFIG_NAME,
+  apiKey: process.env.CLOUDINARY_CONFIG_APIKEY,
+  apiSecret: process.env.CLOUDINARY_CONFIG_APISECRET,
+};
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {

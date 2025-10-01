@@ -1,5 +1,16 @@
-import { collectionNames } from "../../../configserver";
+import _ from "lodash";
+import { cloudinaryConfig, collectionNames } from "../../../configserver";
+import { getRandom } from "../helpers/cryptoHelper";
 import { getInstance } from "../helpers/databaseStorageHelper";
+import { v2 as cloudinary } from "cloudinary";
+import mime from "mime-types";
+import { UploadedFile } from "express-fileupload";
+
+cloudinary.config({
+  cloud_name: cloudinaryConfig.name,
+  api_key: cloudinaryConfig.apiKey,
+  api_secret: cloudinaryConfig.apiSecret,
+});
 
 export interface ProductInterface {
   id: string;
@@ -129,4 +140,66 @@ export const _createProduct = async (
   } catch (e) {
     throw e;
   }
+};
+
+export const uploadToCloudinary = (
+  name: string,
+  folder = "products",
+  file: UploadedFile | UploadedFile[],
+  mimeType: string
+): Promise<{ secure_url: string }> => {
+  // Handle array of files - take the first one
+  const uploadFile = Array.isArray(file) ? file[0] : file;
+
+  console.log("Came here", {
+    format: mime.extension(mimeType) as string,
+    resource_type: "auto",
+    public_id: _.isUndefined(name) ? getRandom() : name, // Fixed logic here too
+    folder,
+  });
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        format: mime.extension(mimeType) as string,
+        resource_type: "auto",
+        public_id: _.isUndefined(name) ? getRandom() : name, // Fixed logic here too
+        folder,
+      },
+      (error, result) => {
+        console.log(error, result);
+        if (error) {
+          reject({ error, message: "Unable to upload the image" });
+          return;
+        }
+
+        const ext = mime.extension(mimeType);
+
+        if (result && "secure_url" in result && result.secure_url) {
+          if (ext === "png" || ext === "jpeg" || ext === "jpg") {
+            result.secure_url = _.replace(
+              result.secure_url,
+              "upload/",
+              "upload/fl_lossy,f_auto/"
+            );
+          } else if (ext === "mp4") {
+            result.secure_url = _.replace(
+              result.secure_url,
+              "upload/",
+              "upload/q_auto:best/f_auto/"
+            );
+          }
+          resolve({ secure_url: result.secure_url });
+        } else {
+          reject({
+            error: "No secure_url returned",
+            message: "Unable to upload the image",
+          });
+        }
+      }
+    );
+
+    // Pipe the file buffer to the upload stream
+    uploadStream.end(uploadFile.data);
+  });
 };
