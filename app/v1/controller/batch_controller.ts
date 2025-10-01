@@ -2,10 +2,12 @@ import { Request, Response } from "express";
 import Joi from "joi";
 import { handleCatch } from "../helpers/errorReporter";
 import {
+  _attestBatchByAdmin,
   _createBatch,
   _getAllBatchesByProduct,
   _updateBatchNFT,
 } from "../service/batch_service";
+import { Meta } from "../../../type";
 
 export const getAllBatchesByProduct = async (req: Request, res: Response) => {
   try {
@@ -72,6 +74,31 @@ export const updateBatchNFT = async (req: Request, res: Response) => {
       .validateAsync(payload);
 
     const result = await _updateBatchNFT(_payload);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const attestBatchByAdmin = async (req: Request, res: Response) => {
+  try {
+    const {
+      meta: { type } = {} as Meta,
+      body: { payload },
+    } = req;
+
+    const _payload = await Joi.object()
+      .keys({
+        privateKey: Joi.string().trim().required(),
+        batch_id: Joi.number().required(),
+      })
+      .validateAsync(payload);
+
+    const result = await _attestBatchByAdmin(_payload, type);
 
     return res.send({
       success: true,

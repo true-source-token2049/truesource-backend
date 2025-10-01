@@ -8,6 +8,7 @@ export interface ExpressApp extends Application {
 export interface Meta {
   id: number;
   email: string;
+  type: string;
 }
 
 declare global {

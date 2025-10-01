@@ -3,17 +3,21 @@ import { collectionNames } from "../../../configserver";
 import { getInstance } from "../helpers/databaseStorageHelper";
 import _ from "lodash";
 import axios from "axios";
-import { createAndUploadNftMetadata } from "../client/nft";
+import { attestNFT, createAndUploadNftMetadata } from "../client/nft";
 
 export const _getAllBatchesByProduct = async (product_id: number) => {
   try {
     const Batch = getInstance(collectionNames.BATCHES);
+    const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
     const batches = await Batch.findAll({
       where: {
         product_id,
       },
       attributes: {
         exclude: ["deletedAt", "updatedAt", "lockVersion"],
+      },
+      include: {
+        model: BatchBlock,
       },
     });
 
@@ -221,6 +225,68 @@ export const _updateBatchNFT = async (payload: {
 
     return {
       message: "Batch NFT update successfully",
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const _attestBatchByAdmin = async (
+  payload: {
+    privateKey: string;
+    batch_id: number;
+  },
+  type: string
+) => {
+  try {
+    const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
+    const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
+
+    const batchrangelog = await BatchRangeLog.findOne({
+      where: {
+        batch_id: payload.batch_id,
+      },
+      order: [["id", "ASC"]],
+      raw: true,
+    });
+
+    if (!batchrangelog) {
+      throw {
+        message: "Invalid Batch Id",
+        error: "Bad Request",
+      };
+    }
+
+    const { transactionHash } = await attestNFT(
+      batchrangelog.nft_token_id,
+      `Verified Batch by ${type}`,
+      `Verified Batch by ${type}`,
+      payload.privateKey
+    );
+
+    await BatchBlock.update(
+      Object.assign(
+        {},
+        type === "manufacturer" && {
+          manufacturer_transaction_hash: transactionHash,
+        },
+        type === "retailer" && {
+          retailer_transaction_hash: transactionHash,
+        },
+        type === "distributor" && {
+          distributor_transaction_hash: transactionHash,
+        }
+      ),
+      {
+        where: {
+          batch_id: payload.batch_id,
+        },
+      }
+    );
+
+    return {
+      message: "Attest Batch Successfully",
+      transactionHash,
     };
   } catch (error) {
     throw error;
