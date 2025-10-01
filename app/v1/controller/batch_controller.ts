@@ -5,6 +5,7 @@ import {
   _attestBatchByAdmin,
   _createBatch,
   _getAllBatchesByProduct,
+  _getNFTTokenId,
   _updateBatchNFT,
   _verifyAuthCode,
 } from "../service/batch_service";
@@ -123,6 +124,29 @@ export const verifyAuthCode = async (req: Request, res: Response) => {
       .validateAsync({ authcode });
 
     const result = await _verifyAuthCode(authcode);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const getNFTTokenId = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { authcode },
+    } = req;
+
+    const validatedobj = await Joi.object()
+      .keys({
+        authcode: Joi.string().trim().required(),
+      })
+      .validateAsync({ authcode });
+
+    const result = await _getNFTTokenId(authcode);
 
     return res.send({
       success: true,

@@ -388,3 +388,12 @@ export const _verifyAuthCode = async (authcode: string) => {
     throw error;
   }
 };
+
+export const _getNFTTokenId = async (authcode: string) => {
+  try {
+    const AuthCode = getInstance(collectionNames.AUTCHODES);
+    return AuthCode.findOne({ where: { authcode }, attributes: ["id"] });
+  } catch (error) {
+    throw error;
+  }
+};

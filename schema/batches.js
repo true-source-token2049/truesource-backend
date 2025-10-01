@@ -22,7 +22,7 @@ const batchSchema = {
   nft_minting_status: {
     type: STRING,
     allowNull: false,
-    defaultValue: "text",
+    defaultValue: "pending",
   },
   total_units: {
     type: INTEGER,

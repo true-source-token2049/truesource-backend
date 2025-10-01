@@ -13,8 +13,7 @@ describe("Order API Tests", () => {
 
   beforeAll(async () => {
     // Import app after mocks are set up
-    const appModule = await import("../app");
-    app = appModule.default;
+    app = require("../app");
     mockAuthToken = "Bearer mock-valid-token";
     mockUserId = 1;
   });

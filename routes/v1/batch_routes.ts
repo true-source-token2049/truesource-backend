@@ -40,4 +40,10 @@ export const routes = [
     handler: "verifyAuthCode",
     routePrefix: routePrefix.userRoute,
   },
+  {
+    method: "get",
+    endPoint: "token/:authcode",
+    handler: "getNFTTokenId",
+    routePrefix: routePrefix.userRoute,
+  },
 ];

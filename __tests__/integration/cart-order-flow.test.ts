@@ -20,8 +20,7 @@ describe("Cart to Order Flow Integration Tests", () => {
   let testProductId: number;
 
   beforeAll(async () => {
-    const appModule = await import("../../app");
-    app = appModule.default;
+    app = require("../../app");
     mockAuthToken = generateMockAuthToken(1);
     testProductId = 1;
   });
