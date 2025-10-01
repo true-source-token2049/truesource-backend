@@ -1,7 +1,6 @@
-import { collectionNames } from "../configserver";
+import { INTEGER, STRING } from "sequelize";
 import { addInstance } from "../app/v1/helpers/databaseStorageHelper";
-import { BOOLEAN, INTEGER, STRING, TEXT } from "sequelize";
-import { JSONB } from "sequelize";
+import { collectionNames } from "../configserver";
 
 const batchBlockSchema = {
   id: {
@@ -20,11 +19,6 @@ const batchBlockSchema = {
   distributor_transaction_hash: {
     type: STRING,
   },
-  // status: {
-  //   type: STRING,
-  //   allowNull: false,
-  //   defaultValue: "pending",
-  // },
 };
 
 export default function (app) {

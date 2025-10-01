@@ -1,7 +1,6 @@
-import { collectionNames } from "../configserver";
+import { INTEGER, STRING } from "sequelize";
 import { addInstance } from "../app/v1/helpers/databaseStorageHelper";
-import { BOOLEAN, INTEGER, STRING, TEXT } from "sequelize";
-import { JSONB } from "sequelize";
+import { collectionNames } from "../configserver";
 
 const batchSchema = {
   id: {
@@ -28,6 +27,11 @@ const batchSchema = {
   total_units: {
     type: INTEGER,
     allowNull: false,
+  },
+  available_units: {
+    type: INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
   uid: {
     type: STRING,

@@ -11,6 +11,9 @@ export const collectionNames = {
   USER_COLLECTION: "user_collection",
   PRODUCT_OWNERSHIP: "product_ownership",
   ADMIN_USER: "admin_user",
+  CART: "cart",
+  ORDERS: "orders",
+  ORDER_ITEMS: "order_items",
 };
 
 export const cloudinaryConfig = {

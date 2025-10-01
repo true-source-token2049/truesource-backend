@@ -34,4 +34,17 @@ export const routes = [
     routePrefix: routePrefix.adminRoute,
     middleware: ["isAdminUser"],
   },
+  // Customer routes
+  {
+    method: "get",
+    endPoint: "products",
+    handler: "getAllProducts",
+    routePrefix: routePrefix.openRoute,
+  },
+  {
+    method: "get",
+    endPoint: "product/:product_id",
+    handler: "getProductById",
+    routePrefix: routePrefix.openRoute,
+  },
 ];

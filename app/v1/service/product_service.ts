@@ -27,6 +27,7 @@ export const _getAllProducts = async (limit?: number, offset?: number) => {
     const Product = getInstance(collectionNames.PRODUCT);
     const ProductAsset = getInstance(collectionNames.PRODUCT_ASSETS);
     const ProductAttr = getInstance(collectionNames.PRODUCT_ATTRIBUTES);
+    const Batches = getInstance(collectionNames.BATCHES);
 
     const products = await Product.findAll({
       attributes: {
@@ -56,6 +57,11 @@ export const _getAllProducts = async (limit?: number, offset?: number) => {
               "product_id",
             ],
           },
+        },
+        {
+          model: Batches,
+          attributes: ["id", "available_units"],
+          required: false,
         },
       ],
     });
