@@ -7,6 +7,7 @@ import {
   _createBatch,
   _getAllBatchesByProduct,
   _getNFTTokenId,
+  _getUserNFTs,
   _updateBatchNFT,
   _verifyAuthCode,
 } from "../service/batch_service";
@@ -48,7 +49,7 @@ export const createBatch = async (req: Request, res: Response) => {
         product_id: Joi.number().required(),
       })
       .validateAsync(payload);
-
+    payload.available_units = payload.total_units;
     const result = await _createBatch(_payload);
 
     return res.send({
@@ -175,6 +176,21 @@ export const getNFTTokenId = async (req: Request, res: Response) => {
       .validateAsync({ authcode });
 
     const result = await _getNFTTokenId(authcode);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const getUserNFTs = async (req: Request, res: Response) => {
+  try {
+    const { user: { id } = {} as Meta } = req;
+
+    const result = await _getUserNFTs(id);
 
     return res.send({
       success: true,

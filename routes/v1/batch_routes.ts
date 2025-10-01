@@ -46,4 +46,10 @@ export const routes = [
     handler: "getNFTTokenId",
     routePrefix: routePrefix.userRoute,
   },
+  {
+    method: "get",
+    endPoint: "nft",
+    handler: "getUserNFTs",
+    routePrefix: routePrefix.userRoute,
+  },
 ];

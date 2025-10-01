@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import Joi from "joi";
 import { handleCatch } from "../helpers/errorReporter";
-import { _createOrder, _getOrderById } from "../service/order_service";
+import {
+  _createOrder,
+  _getAllOrderForUser,
+  _getOrderById,
+} from "../service/order_service";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
@@ -73,6 +77,30 @@ export const getOrder = async (req: Request, res: Response) => {
     }
 
     const result = await _getOrderById(user.id, validatedOrderId);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const getAllUserOrder = async (req: Request, res: Response) => {
+  try {
+    const { user } = req as any;
+
+    // Get user ID from authenticated user
+    if (!user || !user.id) {
+      return res.status(401).send({
+        success: false,
+        error: "Unauthorized",
+        message: "User not authenticated",
+      });
+    }
+
+    const result = await _getAllOrderForUser(user.id);
 
     return res.send({
       success: true,

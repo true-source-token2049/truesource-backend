@@ -428,3 +428,12 @@ export const _getNFTTokenId = async (authcode: string) => {
     throw error;
   }
 };
+
+export const _getUserNFTs = async (id: number) => {
+  try {
+    const UserCollections = getInstance(collectionNames.USER_COLLECTION);
+    return UserCollections.findAll({ where: { user_id: id } });
+  } catch (error) {
+    throw error;
+  }
+};

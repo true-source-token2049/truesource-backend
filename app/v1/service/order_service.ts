@@ -294,3 +294,52 @@ export const _getOrderById = async (
     throw error;
   }
 };
+
+export const _getAllOrderForUser = async (user_id: number) => {
+  try {
+    const Orders = getInstance(collectionNames.ORDERS);
+    const OrderItems = getInstance(collectionNames.ORDER_ITEMS);
+    const Product = getInstance(collectionNames.PRODUCT);
+
+    const orders = await Orders.findAll({
+      where: { user_id },
+      include: [
+        {
+          model: OrderItems,
+          include: [
+            {
+              model: Product,
+              attributes: ["id", "title"],
+            },
+          ],
+        },
+      ],
+    });
+
+    let result = orders.map((order: any) => {
+      const items = order.order_items.map((item: any) => ({
+        product_id: item.product_id,
+        product_name: item.product?.title || "Unknown Product",
+        quantity: item.quantity,
+        price: parseFloat(item.price),
+        subtotal: parseFloat(item.subtotal),
+      }));
+
+      return {
+        order_id: order.id,
+        id: order.id,
+        order_number: order.order_number,
+        status: order.status,
+        order_items: items,
+        subtotal: parseFloat(order.subtotal),
+        tax_amount: parseFloat(order.tax_amount),
+        shipping_address: order.shipping_address,
+        total_amount: parseFloat(order.total_amount),
+        created_at: order.createdAt,
+      };
+    });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
