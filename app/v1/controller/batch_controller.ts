@@ -4,6 +4,7 @@ import { handleCatch } from "../helpers/errorReporter";
 import {
   _addBlockToBatch,
   _attestBatchByAdmin,
+  _claimNFT,
   _createBatch,
   _getAllBatchesByProduct,
   _getNFTTokenId,
@@ -191,6 +192,31 @@ export const getUserNFTs = async (req: Request, res: Response) => {
     const { user: { id } = {} as Meta } = req;
 
     const result = await _getUserNFTs(id);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const claimNFT = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { authcode },
+      body: { payload },
+      user = {} as Meta,
+    } = req;
+
+    const { hash: _validatedHash } = await Joi.object()
+      .keys({
+        hash: Joi.string().trim().required(),
+      })
+      .validateAsync(payload);
+
+    const result = await _claimNFT(authcode, _validatedHash, user.id);
 
     return res.send({
       success: true,

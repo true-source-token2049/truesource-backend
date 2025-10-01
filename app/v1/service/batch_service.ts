@@ -245,25 +245,45 @@ export const _addBlockToBatch = async (payload: {
 }) => {
   try {
     const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
-    await BatchBlock.update(
-      Object.assign(
-        {},
-        payload.type === "manufacturer" && {
-          manufacturer_transaction_hash: payload.transactionHash,
-        },
-        payload.type === "retailer" && {
-          retailer_transaction_hash: payload.transactionHash,
-        },
-        payload.type === "distributor" && {
-          distributor_transaction_hash: payload.transactionHash,
+    const _bb = await BatchBlock.findOne({
+      where: { batch_id: payload.batch_id },
+    });
+
+    if (!_bb)
+      await BatchBlock.create(
+        Object.assign(
+          { batch_id: payload.batch_id },
+          payload.type === "manufacturer" && {
+            manufacturer_transaction_hash: payload.transactionHash,
+          },
+          payload.type === "retailer" && {
+            retailer_transaction_hash: payload.transactionHash,
+          },
+          payload.type === "distributor" && {
+            distributor_transaction_hash: payload.transactionHash,
+          }
+        )
+      );
+    else
+      await BatchBlock.update(
+        Object.assign(
+          {},
+          payload.type === "manufacturer" && {
+            manufacturer_transaction_hash: payload.transactionHash,
+          },
+          payload.type === "retailer" && {
+            retailer_transaction_hash: payload.transactionHash,
+          },
+          payload.type === "distributor" && {
+            distributor_transaction_hash: payload.transactionHash,
+          }
+        ),
+        {
+          where: {
+            batch_id: payload.batch_id,
+          },
         }
-      ),
-      {
-        where: {
-          batch_id: payload.batch_id,
-        },
-      }
-    );
+      );
     return { message: "Block succesfully added" };
   } catch (e) {
     throw e;
@@ -440,6 +460,53 @@ export const _getUserNFTs = async (id: number) => {
   try {
     const UserCollections = getInstance(collectionNames.USER_COLLECTION);
     return UserCollections.findAll({ where: { user_id: id } });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const _claimNFT = async (
+  authcode: string,
+  hash: string,
+  user_id: number
+) => {
+  try {
+    const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
+    const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
+    const Batch = getInstance(collectionNames.BATCHES);
+    const UserCollection = getInstance(collectionNames.USER_COLLECTION);
+    const ProductAssets = getInstance(collectionNames.PRODUCT_ASSETS);
+
+    const _brl = await BatchRangeLog.findOne({
+      where: { authcode },
+      attributes: ["id", "nft_token_id", "order_item_id", "authcode"],
+      include: {
+        model: Batch,
+        include: { model: BatchBlock },
+      },
+    });
+
+    console.log(_brl.toJSON());
+    if (!_brl.order_item_id) throw { message: "Item not sold yet" };
+    // TODO: throw when  BatchBlock's hashes are not present
+    // manufacturer_transaction_hash;
+    // retailer_transaction_hash;
+    // distributor_transaction_hash;
+    const assets = await ProductAssets.findAll({
+      where: { product_id: _brl.batch.product_id, view: "DEFAULT" },
+    });
+    throw { message: "Sweet Error" };
+    await UserCollection.create({
+      source: "retailer",
+      owner_level: 1,
+      nft_transaction_hash: hash,
+      asset_link: assets.map((asset: any) => asset.url).join(","),
+      user_id,
+      brl_id: _brl.id,
+      status: "claimed",
+    });
+
+    console.log(_brl.toJSON());
   } catch (error) {
     throw error;
   }

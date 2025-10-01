@@ -50,6 +50,14 @@ export const routes = [
     method: "get",
     endPoint: "nft",
     handler: "getUserNFTs",
+    middleware: ["isCustomer"],
+    routePrefix: routePrefix.userRoute,
+  },
+  {
+    method: "post",
+    endPoint: "claim/:authcode",
+    handler: "claimNFT",
+    middleware: ["isCustomer"],
     routePrefix: routePrefix.userRoute,
   },
 ];
