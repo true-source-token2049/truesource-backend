@@ -30,13 +30,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
         statusCodesHelper.UNAUTHORIZED
       );
     } else {
-      checkToken(token, jsonWebTokenConfig.customer_access)
+      checkToken(token, jsonWebTokenConfig["customer_access"])
         .then((_data) => {
           const data = _data as Meta;
 
           if (data) {
             req.meta = data;
             (req as any).user = data; // Add user to request for convenience
+            console.log(req.user);
             next();
           } else {
             return handleCatch(

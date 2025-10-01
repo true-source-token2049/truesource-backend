@@ -6,7 +6,7 @@ import { _createOrder, _getOrderById } from "../service/order_service";
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const {
-      body: { items, shipping_address },
+      body: { payload },
       user,
     } = req as any;
 
@@ -25,7 +25,7 @@ export const createOrder = async (req: Request, res: Response) => {
           .required(),
         shipping_address: Joi.object().optional(),
       })
-      .validateAsync({ items, shipping_address });
+      .validateAsync(payload);
 
     // Get user ID from authenticated user
     if (!user || !user.id) {

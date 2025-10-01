@@ -60,11 +60,25 @@ export const _loginCustomer = async (_payload: OAuthPayload) => {
     }
     const [access_token, refresh_token] = await Promise.all([
       createToken(
-        _.pick(customer, "name", "email", "wallet_address", "alchemy_user_id"),
+        _.pick(
+          customer,
+          "id",
+          "name",
+          "email",
+          "wallet_address",
+          "alchemy_user_id"
+        ),
         jsonWebTokenConfig["customer_access"]
       ),
       createToken(
-        _.pick(customer, "name", "email", "wallet_address", "alchemy_user_id"),
+        _.pick(
+          customer,
+          "id",
+          "name",
+          "email",
+          "wallet_address",
+          "alchemy_user_id"
+        ),
         jsonWebTokenConfig["customer_refresh"]
       ),
     ]);

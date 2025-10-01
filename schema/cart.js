@@ -1,6 +1,6 @@
 import { collectionNames } from "../configserver";
 import { addInstance } from "../app/v1/helpers/databaseStorageHelper";
-import { INTEGER, DECIMAL } from "sequelize";
+import { INTEGER, FLOAT } from "sequelize";
 
 const cartSchema = {
   id: {
@@ -24,7 +24,7 @@ const cartSchema = {
     defaultValue: 1,
   },
   price: {
-    type: DECIMAL(10, 2),
+    type: FLOAT,
     allowNull: false,
   },
 };

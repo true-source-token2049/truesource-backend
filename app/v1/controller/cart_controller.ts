@@ -6,7 +6,9 @@ import { _addToCart, _getCartSummary } from "../service/cart_service";
 export const addToCart = async (req: Request, res: Response) => {
   try {
     const {
-      body: { productId, qty },
+      body: {
+        payload: { productId, qty },
+      },
       user,
     } = req as any;
 

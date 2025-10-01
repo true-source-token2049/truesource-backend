@@ -99,9 +99,9 @@ export const engineImport = (
           Batches.hasMany(OrderItems, { foreignKey: "batch_id" });
           OrderItems.belongsTo(Batches, { foreignKey: "batch_id" });
 
-          // BatchRangeLog to Orders and User
-          Orders.hasMany(BatchRangeLog, { foreignKey: "order_id" });
-          BatchRangeLog.belongsTo(Orders, { foreignKey: "order_id" });
+          // BatchRangeLog to OrderItems and User
+          OrderItems.hasMany(BatchRangeLog, { foreignKey: "order_item_id" });
+          BatchRangeLog.belongsTo(OrderItems, { foreignKey: "order_item_id" });
           User.hasMany(BatchRangeLog, { foreignKey: "user_id" });
           BatchRangeLog.belongsTo(User, { foreignKey: "user_id" });
 

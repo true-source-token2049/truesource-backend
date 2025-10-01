@@ -1,6 +1,6 @@
-import { collectionNames } from "../configserver";
+import { FLOAT, INTEGER } from "sequelize";
 import { addInstance } from "../app/v1/helpers/databaseStorageHelper";
-import { INTEGER, DECIMAL } from "sequelize";
+import { collectionNames } from "../configserver";
 
 const orderItemSchema = {
   id: {
@@ -27,11 +27,11 @@ const orderItemSchema = {
     allowNull: false,
   },
   price: {
-    type: DECIMAL(10, 2),
+    type: FLOAT(10, 2),
     allowNull: false,
   },
   subtotal: {
-    type: DECIMAL(10, 2),
+    type: FLOAT(10, 2),
     allowNull: false,
   },
 };

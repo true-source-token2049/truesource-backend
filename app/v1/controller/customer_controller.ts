@@ -20,13 +20,14 @@ export const loginCustomer = async (req: Request, res: Response) => {
   Joi.object()
     .keys({
       userId: Joi.string().required(),
+      address: Joi.string().optional(),
       email: Joi.string().email().required(),
       clientAddress: Joi.string().required(),
       solanaAddress: Joi.string().optional(),
       orgId: Joi.string().required(),
       type: Joi.string().required(),
     })
-    .validateAsync({ payload })
+    .validateAsync(payload)
     .then((_payload) => {
       return _loginCustomer(_payload);
     })

@@ -1,6 +1,6 @@
 import { collectionNames } from "../configserver";
 import { addInstance } from "../app/v1/helpers/databaseStorageHelper";
-import { INTEGER, STRING, DECIMAL, JSONB } from "sequelize";
+import { INTEGER, STRING, FLOAT, JSONB } from "sequelize";
 
 const orderSchema = {
   id: {
@@ -25,15 +25,15 @@ const orderSchema = {
     defaultValue: "pending",
   },
   subtotal: {
-    type: DECIMAL(10, 2),
+    type: FLOAT,
     allowNull: false,
   },
   tax_amount: {
-    type: DECIMAL(10, 2),
+    type: FLOAT,
     allowNull: false,
   },
   total_amount: {
-    type: DECIMAL(10, 2),
+    type: FLOAT,
     allowNull: false,
   },
   shipping_address: {

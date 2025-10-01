@@ -120,7 +120,7 @@ export const _createOrder = async (
           const availableBatchRangeLogs = await BatchRangeLog.findAll({
             where: {
               batch_id: batch.id,
-              order_id: null, // Only get unallocated logs
+              order_item_id: null, // Only get unallocated logs
             },
             limit: deductAmount,
             transaction,
@@ -204,10 +204,10 @@ export const _createOrder = async (
         { transaction }
       );
 
-      // Link batch_range_logs to this order
+      // Link batch_range_logs to this order_item
       for (const allocation of itemData.batchAllocations) {
         for (const rangeLog of allocation.rangeLogs) {
-          rangeLog.order_id = order.id;
+          rangeLog.order_item_id = orderItem.id;
           rangeLog.user_id = userId;
           await rangeLog.save({ transaction });
         }
