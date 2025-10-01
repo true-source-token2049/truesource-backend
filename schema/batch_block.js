@@ -20,11 +20,11 @@ const batchBlockSchema = {
   distributor_transaction_hash: {
     type: STRING,
   },
-  status: {
-    type: STRING,
-    allowNull: false,
-    defaultValue: "pending",
-  },
+  // status: {
+  //   type: STRING,
+  //   allowNull: false,
+  //   defaultValue: "pending",
+  // },
 };
 
 export default function (app) {
