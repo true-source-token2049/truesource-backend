@@ -240,6 +240,7 @@ export const _updateBatchNFT = async (payload: {
 
 export const _addBlockToBatch = async (payload: {
   transaction_hash: string;
+  note: string;
   type: string;
   batch_id: number;
 }) => {
@@ -255,12 +256,15 @@ export const _addBlockToBatch = async (payload: {
           { batch_id: payload.batch_id },
           payload.type.toLowerCase() === "manufacturer" && {
             manufacturer_transaction_hash: payload.transaction_hash,
+            manufacturer_note: payload.note,
           },
           payload.type.toLowerCase() === "retailer" && {
             retailer_transaction_hash: payload.transaction_hash,
+            retailer_note: payload.note,
           },
           payload.type.toLowerCase() === "distributor" && {
             distributor_transaction_hash: payload.transaction_hash,
+            distributor_note: payload.note,
           }
         )
       );
@@ -270,12 +274,15 @@ export const _addBlockToBatch = async (payload: {
           {},
           payload.type.toLowerCase() === "manufacturer" && {
             manufacturer_transaction_hash: payload.transaction_hash,
+            manufacturer_note: payload.note,
           },
           payload.type.toLowerCase() === "retailer" && {
             retailer_transaction_hash: payload.transaction_hash,
+            retailer_note: payload.note,
           },
           payload.type.toLowerCase() === "distributor" && {
             distributor_transaction_hash: payload.transaction_hash,
+            distributor_note: payload.note,
           }
         ),
         {
