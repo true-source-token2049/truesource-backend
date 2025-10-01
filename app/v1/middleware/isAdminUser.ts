@@ -30,17 +30,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
         statusCodesHelper.UNAUTHORIZED
       );
     } else {
-      console.log(token);
       checkToken(token, jsonWebTokenConfig.admin_access)
         .then((_data) => {
           const data = _data as Meta;
-          console.log(data);
 
           if (data) {
             // If data is pending and the route is not for approval, return pending status
 
             req.meta = data;
-            console.log(data);
 
             next();
           } else {
