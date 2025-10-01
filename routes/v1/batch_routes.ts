@@ -34,4 +34,10 @@ export const routes = [
     routePrefix: routePrefix.adminRoute,
     middleware: ["isAdminUser"],
   },
+  {
+    method: "get",
+    endPoint: "verify/:authcode",
+    handler: "verifyAuthCode",
+    routePrefix: routePrefix.userRoute,
+  },
 ];

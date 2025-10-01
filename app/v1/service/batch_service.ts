@@ -292,3 +292,99 @@ export const _attestBatchByAdmin = async (
     throw error;
   }
 };
+
+export const _verifyAuthCode = async (authcode: string) => {
+  try {
+    const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
+    const Batch = getInstance(collectionNames.BATCHES);
+    const Product = getInstance(collectionNames.PRODUCT);
+    const ProductAsset = getInstance(collectionNames.PRODUCT_ASSETS);
+    const ProductAttr = getInstance(collectionNames.PRODUCT_ATTRIBUTES);
+    const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
+
+    let result = await BatchRangeLog.findOne({
+      where: { authcode },
+      attributes: {
+        exclude: ["deletedAt", "updatedAt", "lockVersion", "batch_id"],
+      },
+      include: {
+        model: Batch,
+        attributes: {
+          exclude: [
+            "deletedAt",
+            "updatedAt",
+            "lockVersion",
+            "createdAt",
+            "product_id",
+          ],
+        },
+        include: [
+          {
+            model: Product,
+            attributes: {
+              exclude: ["deletedAt", "updatedAt", "lockVersion", "createdAt"],
+            },
+            include: [
+              {
+                model: ProductAsset,
+                attributes: {
+                  exclude: [
+                    "deletedAt",
+                    "updatedAt",
+                    "lockVersion",
+                    "createdAt",
+                    "product_id",
+                  ],
+                },
+              },
+              {
+                model: ProductAttr,
+                attributes: {
+                  exclude: [
+                    "deletedAt",
+                    "updatedAt",
+                    "lockVersion",
+                    "createdAt",
+                    "product_id",
+                  ],
+                },
+              },
+            ],
+          },
+          {
+            model: BatchBlock,
+            attributes: {
+              exclude: ["deletedAt", "updatedAt", "lockVersion", "createdAt"],
+            },
+          },
+        ],
+      },
+    });
+
+    if (!result) {
+      throw {
+        message: "Invalid authcode",
+        error: "Bad Request",
+      };
+    }
+
+    result = result.toJSON();
+    result.number_of_views += 1;
+    const number_of_views = result.number_of_views;
+
+    await BatchRangeLog.update(
+      {
+        number_of_views,
+      },
+      {
+        where: {
+          authcode,
+        },
+      }
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};

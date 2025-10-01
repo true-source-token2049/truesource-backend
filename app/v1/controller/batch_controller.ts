@@ -6,6 +6,7 @@ import {
   _createBatch,
   _getAllBatchesByProduct,
   _updateBatchNFT,
+  _verifyAuthCode,
 } from "../service/batch_service";
 import { Meta } from "../../../type";
 
@@ -99,6 +100,29 @@ export const attestBatchByAdmin = async (req: Request, res: Response) => {
       .validateAsync(payload);
 
     const result = await _attestBatchByAdmin(_payload, type);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const verifyAuthCode = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { authcode },
+    } = req;
+
+    const validatedobj = await Joi.object()
+      .keys({
+        authcode: Joi.string().trim().required(),
+      })
+      .validateAsync({ authcode });
+
+    const result = await _verifyAuthCode(authcode);
 
     return res.send({
       success: true,
