@@ -102,8 +102,8 @@ export const engineImport = (
           // BatchRangeLog to OrderItems and User
           OrderItems.hasMany(BatchRangeLog, { foreignKey: "order_item_id" });
           BatchRangeLog.belongsTo(OrderItems, { foreignKey: "order_item_id" });
-          User.hasMany(BatchRangeLog, { foreignKey: "user_id" });
-          BatchRangeLog.belongsTo(User, { foreignKey: "user_id" });
+          // User.hasMany(BatchRangeLog, { foreignKey: "user_id" });
+          // BatchRangeLog.belongsTo(User, { foreignKey: "user_id" });
 
           app.sequelizeClient
             .sync()

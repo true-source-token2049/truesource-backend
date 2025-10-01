@@ -189,7 +189,7 @@ export const _createOrder = async (
       },
       { transaction }
     );
-
+    console.log("order", order);
     // Create order items and link batch_range_logs
     for (const itemData of orderItemsData) {
       const orderItem = await OrderItems.create(
@@ -208,7 +208,7 @@ export const _createOrder = async (
       for (const allocation of itemData.batchAllocations) {
         for (const rangeLog of allocation.rangeLogs) {
           rangeLog.order_item_id = orderItem.id;
-          rangeLog.user_id = userId;
+          // rangeLog.user_id = userId;
           await rangeLog.save({ transaction });
         }
       }

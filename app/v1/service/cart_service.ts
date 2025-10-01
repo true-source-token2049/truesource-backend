@@ -57,7 +57,7 @@ export const _addToCart = async (
 
     if (cartItem) {
       // Update quantity if item exists
-      cartItem.quantity += quantity;
+      cartItem.quantity = quantity;
       await cartItem.save();
     } else {
       // Create new cart item
