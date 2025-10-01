@@ -50,7 +50,7 @@ export const createBatch = async (req: Request, res: Response) => {
         product_id: Joi.number().required(),
       })
       .validateAsync(payload);
-    payload.available_units = payload.total_units;
+    _payload.available_units = _payload.total_units;
     const result = await _createBatch(_payload);
 
     return res.send({
