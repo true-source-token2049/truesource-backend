@@ -441,7 +441,11 @@ export const _verifyAuthCode = async (authcode: string) => {
         },
       }
     );
-    const hasAttestedNFT = false; // update based on batch-block
+    const hasAttestedNFT =
+      !_.isNull(result?.batch?.batch_block?.manufacturer_transaction_hash) ||
+      !_.isNull(result?.batch?.batch_block?.retailer_transaction_hash) ||
+      !_.isNull(result?.batch?.batch_block?.distributor_transaction_hash); // update based on batch-block
+
     if (result.order_item_id && hasAttestedNFT) result.can_claim_nft = true;
     result.product = result.batch.product;
     delete result.batch.product;
@@ -491,6 +495,11 @@ export const _claimNFT = async (
     });
 
     console.log(_brl.toJSON());
+    const hasAttestedNFT =
+      !_.isNull(_brl?.batch?.batch_block?.manufacturer_transaction_hash) ||
+      !_.isNull(_brl?.batch?.batch_block?.retailer_transaction_hash) ||
+      !_.isNull(_brl?.batch?.batch_block?.distributor_transaction_hash); // update based on batch-block
+
     if (!_brl.order_item_id) throw { message: "Item not sold yet" };
     // TODO: throw when  BatchBlock's hashes are not present
     // manufacturer_transaction_hash;
