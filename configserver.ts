@@ -83,7 +83,11 @@ export const routePrefixV1 = {
 };
 
 export const whitelist: { urls: string[] } = {
-  urls: ["localhost:3000", "truesource-admin-frontend-azgq.vercel.app"],
+  urls: [
+    "localhost:3000",
+    "truesource-admin-frontend-azgq.vercel.app",
+    "truesource-customer-frontend.vercel.app",
+  ],
 };
 
 export const NEXT_PUBLIC_ALCHEMY_API_KEY =
