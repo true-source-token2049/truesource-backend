@@ -47,6 +47,9 @@ export const engineImport = (
           );
           const UserCollection = getInstance(collectionNames.USER_COLLECTION);
           const User = getInstance(collectionNames.USER);
+          const Cart = getInstance(collectionNames.CART);
+          const Orders = getInstance(collectionNames.ORDERS);
+          const OrderItems = getInstance(collectionNames.ORDER_ITEMS);
 
           Product.hasMany(ProductAssets, { foreignKey: "product_id" });
           ProductAssets.belongsTo(Product, { foreignKey: "product_id" });
@@ -77,6 +80,30 @@ export const engineImport = (
 
           UserCollection.belongsTo(User, { foreignKey: "user_id" });
           UserCollection.belongsTo(BatchRangeLog, { foreignKey: "brl_id" });
+
+          // Cart relationships
+          User.hasMany(Cart, { foreignKey: "user_id" });
+          Cart.belongsTo(User, { foreignKey: "user_id" });
+          Product.hasMany(Cart, { foreignKey: "product_id" });
+          Cart.belongsTo(Product, { foreignKey: "product_id" });
+
+          // Order relationships
+          User.hasMany(Orders, { foreignKey: "user_id" });
+          Orders.belongsTo(User, { foreignKey: "user_id" });
+          Orders.hasMany(OrderItems, { foreignKey: "order_id" });
+          OrderItems.belongsTo(Orders, { foreignKey: "order_id" });
+
+          // OrderItems relationships
+          Product.hasMany(OrderItems, { foreignKey: "product_id" });
+          OrderItems.belongsTo(Product, { foreignKey: "product_id" });
+          Batches.hasMany(OrderItems, { foreignKey: "batch_id" });
+          OrderItems.belongsTo(Batches, { foreignKey: "batch_id" });
+
+          // BatchRangeLog to Orders and User
+          Orders.hasMany(BatchRangeLog, { foreignKey: "order_id" });
+          BatchRangeLog.belongsTo(Orders, { foreignKey: "order_id" });
+          User.hasMany(BatchRangeLog, { foreignKey: "user_id" });
+          BatchRangeLog.belongsTo(User, { foreignKey: "user_id" });
 
           app.sequelizeClient
             .sync()

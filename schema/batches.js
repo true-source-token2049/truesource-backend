@@ -29,6 +29,11 @@ const batchSchema = {
     type: INTEGER,
     allowNull: false,
   },
+  available_units: {
+    type: INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
   uid: {
     type: STRING,
     allowNull: false,
