@@ -85,3 +85,12 @@ export const routePrefixV1 = {
 export const whitelist: { urls: string[] } = {
   urls: ["localhost:3000"],
 };
+
+export const NEXT_PUBLIC_ALCHEMY_API_KEY =
+  process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
+export const NEXT_PUBLIC_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+export const PRIVATE_KEY = process.env.PRIVATE_KEY;
+export const PINATA_API_KEY = process.env.PINATA_API_KEY;
+export const PINATA_SECRET_KEY = process.env.PINATA_SECRET_KEY;
+export const PINATA_ACCESS_TOKEN = process.env.PINATA_ACCESS_TOKEN;

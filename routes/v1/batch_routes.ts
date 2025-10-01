@@ -13,4 +13,11 @@ export const routes = [
     routePrefix: routePrefix.adminRoute,
     middleware: ["isAdminUser"],
   },
+  {
+    method: "post",
+    endPoint: "batches",
+    handler: "createBatch",
+    routePrefix: routePrefix.adminRoute,
+    middleware: ["isAdminUser"],
+  },
 ];

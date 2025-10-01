@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import Joi from "joi";
 import { handleCatch } from "../helpers/errorReporter";
-import { _getAllBatchesByProduct } from "../service/batch_service";
+import {
+  _createBatch,
+  _getAllBatchesByProduct,
+} from "../service/batch_service";
 
 export const getAllBatchesByProduct = async (req: Request, res: Response) => {
   try {
@@ -19,6 +22,33 @@ export const getAllBatchesByProduct = async (req: Request, res: Response) => {
     const result = await _getAllBatchesByProduct(id);
 
     return res.send({ success: true, result });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const createBatch = async (req: Request, res: Response) => {
+  try {
+    const {
+      body: { payload },
+    } = req;
+
+    const _payload = await Joi.object()
+      .keys({
+        start: Joi.string().trim().required(),
+        end: Joi.string().trim().required(),
+        total_units: Joi.number().optional(),
+        uid: Joi.string().trim().required(),
+        product_id: Joi.number().required(),
+      })
+      .validateAsync(payload);
+
+    const result = await _createBatch(_payload);
+
+    return res.send({
+      success: true,
+      result,
+    });
   } catch (error) {
     return handleCatch(req, res, error);
   }
