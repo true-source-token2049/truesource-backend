@@ -9,6 +9,7 @@ export const _getAllBatchesByProduct = async (product_id: number) => {
   try {
     const Batch = getInstance(collectionNames.BATCHES);
     const BatchBlock = getInstance(collectionNames.BATCH_BLOCK);
+    const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
     const batches = await Batch.findAll({
       where: {
         product_id,
@@ -16,9 +17,15 @@ export const _getAllBatchesByProduct = async (product_id: number) => {
       attributes: {
         exclude: ["deletedAt", "updatedAt", "lockVersion"],
       },
-      include: {
-        model: BatchBlock,
-      },
+      include: [
+        {
+          model: BatchBlock,
+        },
+        {
+          model: BatchRangeLog,
+          attributes: ["nft_token_id", "authcode", "order_item_id"],
+        },
+      ],
     });
 
     return batches;
