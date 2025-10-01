@@ -165,3 +165,64 @@ const addBatchRangeLogs = async (
     throw error;
   }
 };
+
+export const _updateBatchNFT = async (payload: {
+  nft_token_ids: [string];
+  nft_transaction_hash: string;
+  batch_id: number;
+}) => {
+  try {
+    const Batch = getInstance(collectionNames.BATCHES);
+    const BatchRangeLog = getInstance(collectionNames.BATCH_RANGE_LOG);
+
+    const batch = await Batch.findOne({
+      where: {
+        id: payload.batch_id,
+      },
+      raw: true,
+    });
+
+    if (batch.total_units !== payload.nft_token_ids.length) {
+      throw {
+        message: "Total Units are insufficient",
+        error: "Bad Request",
+      };
+    }
+
+    const logs = await BatchRangeLog.findAll({
+      where: { batch_id: payload.batch_id },
+      order: [["id", "ASC"]],
+    });
+
+    if (logs.length !== payload.nft_token_ids.length) {
+      throw {
+        message: "Total Units are insufficient",
+        error: "Bad Request",
+      };
+    }
+
+    for (let i = 0; i < logs.length; i++) {
+      const log = logs[i];
+      const tokenId = payload?.nft_token_ids[i];
+
+      log.nft_token_id = tokenId;
+      log.nft_transaction_hash = payload.nft_transaction_hash;
+      await log.save();
+    }
+
+    await Batch.update(
+      { nft_minting_status: "completed" },
+      {
+        where: {
+          id: payload.batch_id,
+        },
+      }
+    );
+
+    return {
+      message: "Batch NFT update successfully",
+    };
+  } catch (error) {
+    throw error;
+  }
+};

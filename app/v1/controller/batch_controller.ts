@@ -4,6 +4,7 @@ import { handleCatch } from "../helpers/errorReporter";
 import {
   _createBatch,
   _getAllBatchesByProduct,
+  _updateBatchNFT,
 } from "../service/batch_service";
 
 export const getAllBatchesByProduct = async (req: Request, res: Response) => {
@@ -44,6 +45,33 @@ export const createBatch = async (req: Request, res: Response) => {
       .validateAsync(payload);
 
     const result = await _createBatch(_payload);
+
+    return res.send({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    return handleCatch(req, res, error);
+  }
+};
+
+export const updateBatchNFT = async (req: Request, res: Response) => {
+  try {
+    const {
+      body: { payload },
+    } = req;
+
+    const _payload = await Joi.object()
+      .keys({
+        nft_token_ids: Joi.array()
+          .required()
+          .items(Joi.string().trim().required()),
+        nft_transaction_hash: Joi.string().trim().required(),
+        batch_id: Joi.number().required(),
+      })
+      .validateAsync(payload);
+
+    const result = await _updateBatchNFT(_payload);
 
     return res.send({
       success: true,
