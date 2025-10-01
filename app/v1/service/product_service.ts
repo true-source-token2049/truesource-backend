@@ -64,6 +64,7 @@ export const _getAllProducts = async (limit?: number, offset?: number) => {
           required: false,
         },
       ],
+      order: [[Batches, "available_units", "DESC NULLS LAST"]],
     });
 
     return products;
