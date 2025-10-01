@@ -428,6 +428,7 @@ export const _verifyAuthCode = async (authcode: string) => {
 
     result = result.toJSON();
     result.number_of_views += 1;
+    result.can_claim_nft = false;
     const number_of_views = result.number_of_views;
 
     await BatchRangeLog.update(
@@ -440,7 +441,10 @@ export const _verifyAuthCode = async (authcode: string) => {
         },
       }
     );
-
+    const hasAttestedNFT = false; // update based on batch-block
+    if (result.order_item_id && hasAttestedNFT) result.can_claim_nft = true;
+    result.product = result.batch.product;
+    delete result.batch.product;
     return result;
   } catch (error) {
     throw error;
@@ -495,7 +499,7 @@ export const _claimNFT = async (
     const assets = await ProductAssets.findAll({
       where: { product_id: _brl.batch.product_id, view: "DEFAULT" },
     });
-    throw { message: "Sweet Error" };
+    // throw { message: "Sweet Error" };
     await UserCollection.create({
       source: "retailer",
       owner_level: 1,
