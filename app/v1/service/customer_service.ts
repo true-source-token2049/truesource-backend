@@ -1,6 +1,7 @@
 import _ from "lodash";
-import { collectionNames } from "../../../configserver";
+import { collectionNames, jsonWebTokenConfig } from "../../../configserver";
 import { getInstance } from "../helpers/databaseStorageHelper";
+import { createToken } from "../helpers/jwtHelper";
 
 export interface UserInterface {
   id: number;
@@ -57,15 +58,21 @@ export const _loginCustomer = async (_payload: OAuthPayload) => {
 
       customer = await User.create(userPayload);
     }
+    const [access_token, refresh_token] = await Promise.all([
+      createToken(
+        _.pick(customer, "name", "email", "wallet_address", "alchemy_user_id"),
+        jsonWebTokenConfig["customer_access"]
+      ),
+      createToken(
+        _.pick(customer, "name", "email", "wallet_address", "alchemy_user_id"),
+        jsonWebTokenConfig["customer_refresh"]
+      ),
+    ]);
 
-    return _.pick(
-      customer,
-      "name",
-      "email",
-      "wallet_address",
-      "alchemy_user_id",
-      "profile_icon"
-    );
+    return {
+      message: "User login successfully",
+      token: { access_token, refresh_token },
+    };
   } catch (e) {
     throw e;
   }

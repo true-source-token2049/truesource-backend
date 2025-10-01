@@ -57,7 +57,9 @@ export const postgresConfig = {
 
 export const jsonWebTokenConfig = {
   admin_access: "admin_key",
-  admin_refresh: "admin_key",
+  admin_refresh: "admin_refresh_key",
+  customer_access: "customer_access_key",
+  customer_refresh: "customer_refersh_key",
 };
 
 export const TOKEN_EXPIRATION = {
